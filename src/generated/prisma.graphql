@@ -180,6 +180,7 @@ input GroupWhereInput {
 
 input GroupWhereUniqueInput {
   id: ID
+  name: String
 }
 
 scalar Long

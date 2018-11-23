@@ -36,11 +36,21 @@ function createPost(_, args, context, info) {
     var createPostData = {};
 
     createPostData = {
-        owner: args.owner,
-        group: args.group,
+        owner: {
+            connect: {
+                username: args.owner.username
+            }
+        },
+        group: {
+            connect: {
+                name: args.group.name
+            }
+        },
         tags: args.tags,
         content: args.content
     };
+
+    console.log(createPostData);
 
     sendMessageToRabbitMQ('create', JSON.stringify(createPostData));
 
