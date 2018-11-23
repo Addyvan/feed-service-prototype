@@ -7,7 +7,7 @@ function createUser(_, args, context, info) {
         username: args.username
     };
 
-    sendMessageToRabbitMQ('create', JSON.stringify(createPostData));
+    sendMessageToRabbitMQ('create', JSON.stringify(createUserData));
 
     return context.prisma.mutation.createUser({
         data: createUserData,
@@ -24,8 +24,6 @@ function createGroup(_, args, context, info) {
     if (args.description) {
         createGroupData["description"] = args.description;
     }
-
-    console.log(context.prisma.mutation);
 
     sendMessageToRabbitMQ('create', JSON.stringify(createGroupData));
 
