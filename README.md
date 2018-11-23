@@ -34,8 +34,37 @@ mutation CreateUserExample {
 ```
 
 ```
-mutation CreatePostExample {
-    #NOT SURE YET!
+mutation CreatePost {
+  createPost(
+    owner: {
+    	username: "myusername"
+    }, 
+    group: {
+      name: "mygroupname"
+    },
+    tags: [],
+    content: "post content"
+  ) {
+    id
+    createdAt
+  }
+}
+```
+
+```
+{
+  posts {
+    id
+    createdAt
+    tags
+    owner {
+      username
+    }
+    group {
+      name
+    }
+		content    
+  }
 }
 ```
 
