@@ -1,10 +1,10 @@
-var sendMessageToRabbitMQ = require('../../rabbitmq/send-message');
+//var sendMessageToRabbitMQ = require('../../rabbitmq/send-message');
 
 
 function createPost(_, args, context, info) {
     var createPostData = {};
 
-    sendMessageToRabbitMQ('createPost', 'test');
+    //sendMessageToRabbitMQ('createPost', 'test');
 
     createPostData = {
         author: args.author,
@@ -17,6 +17,15 @@ function createPost(_, args, context, info) {
         }, info)
 }
 
+async function deletePost(_, args, context, info) {
+    return await context.prisma.mutation.deletePost({
+        where:{
+            id: args.id
+        }
+    })
+}
+
 module.exports = {
-    createPost
+    createPost,
+    deletePost
 }

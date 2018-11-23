@@ -4,6 +4,7 @@ type Query {
 
 type Mutation {
     createPost(author: String!, time_created: String!, content: String!): Post!
+    deletePost(id: ID!): Boolean!
 }
 
 type Post {
@@ -11,4 +12,10 @@ type Post {
     author: String!
     time_created: String!
     content: String!
+}
+
+type PostAnalytics {
+    views: Int!
+    clicks: Int!
+    likes: Int!
 }
