@@ -1,6 +1,34 @@
+type User {
+    id: ID! @unique
+    username: String! @unique
+    posts: [Post!]! @relation(name: "OwnerOfPost")
+}
+
 type Post {
     id: ID! @unique
-    author: String!
-    time_created: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    owner: User! @relation(name: "OwnerOfPost")
+    group: Group!
+    tags: [String!]!
     content: String!
+    analytics: PostAnalytics
+}
+
+type Group {
+    id: ID! @unique
+    name: String!
+    description: String
+    members: [User!]!
+    posts: [Post!]!
+}
+
+type PostAnalytics {
+    owner: Post!
+    views: Int!
+    expands: Int!
+    like_count: Int!
+    liked_by: [User!]! @relation(name: "LikedBy")
+    share_count: Int!
+    shared_by: [User!]! @relation(name: "SharedBy")
 }

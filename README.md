@@ -49,3 +49,7 @@ If you'd like to limit the amount of posts returned:
 ```
 
 This will give you the author and content for the first 5 posts, you can also use the last keyword to get the most recently created posts.
+
+## RabbitMQ
+
+You can access the message queue interface at `http://localhost:15672` with the username `user` and password `bitnami`.

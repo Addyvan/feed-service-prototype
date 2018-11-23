@@ -1,21 +1,53 @@
 type Query {
-    posts(id: ID, author: String): [Post]!
+    group(id: ID, name: String): [Post]!
 }
 
 type Mutation {
-    createPost(author: String!, time_created: String!, content: String!): Post!
+    createUser(username: String!): User!
+    createGroup(name: String!, description: String): Group!
+    createPost(owner: UserInput!, group: GroupInput!, tags: [String]!, content: String!): Post!
     deletePost(id: ID!): Boolean!
+}
+
+type User {
+    id: ID!
+    username: String!
+    posts: [Post]!
 }
 
 type Post {
     id: ID!
-    author: String!
-    time_created: String!
+    createdAt: String!
+    updatedAt: String!
+    tags: [String!]!
+    owner: User!
+    group: Group!
     content: String!
+    analytics: PostAnalytics
+}
+
+type Group {
+    id: ID!
+    name: String!
+    description: String
+    members: [User]!
+    posts: [Post]!
 }
 
 type PostAnalytics {
+    owner: Post!
     views: Int!
-    clicks: Int!
-    likes: Int!
+    expands: Int!
+    like_count: Int!
+    liked_by: [User]!
+    share_count: Int!
+    shared_by: [User]!
+}
+
+input UserInput {
+    username: String!
+}
+
+input GroupInput {
+    name: String!
 }
