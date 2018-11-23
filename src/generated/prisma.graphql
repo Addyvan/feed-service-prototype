@@ -1,28 +1,211 @@
-# source: http://localhost:4466/profile
-# timestamp: Tue Nov 20 2018 10:57:17 GMT-0500 (Eastern Standard Time)
+type AggregateGroup {
+  count: Int!
+}
 
 type AggregatePost {
   count: Int!
 }
 
+type AggregatePostAnalytics {
+  count: Int!
+}
+
+type AggregateUser {
+  count: Int!
+}
+
 type BatchPayload {
-  """The number of nodes that have been affected by the Batch operation."""
   count: Long!
 }
 
-"""
-The `Long` scalar type represents non-fractional signed whole numeric values.
-Long can represent values between -(2^63) and 2^63 - 1.
-"""
+scalar DateTime
+
+type Group {
+  id: ID!
+  name: String!
+  description: String
+  members(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]
+}
+
+type GroupConnection {
+  pageInfo: PageInfo!
+  edges: [GroupEdge]!
+  aggregate: AggregateGroup!
+}
+
+input GroupCreateInput {
+  name: String!
+  description: String
+  members: UserCreateManyInput
+  posts: PostCreateManyWithoutGroupInput
+}
+
+input GroupCreateOneWithoutPostsInput {
+  create: GroupCreateWithoutPostsInput
+  connect: GroupWhereUniqueInput
+}
+
+input GroupCreateWithoutPostsInput {
+  name: String!
+  description: String
+  members: UserCreateManyInput
+}
+
+type GroupEdge {
+  node: Group!
+  cursor: String!
+}
+
+enum GroupOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type GroupPreviousValues {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type GroupSubscriptionPayload {
+  mutation: MutationType!
+  node: Group
+  updatedFields: [String!]
+  previousValues: GroupPreviousValues
+}
+
+input GroupSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: GroupWhereInput
+  AND: [GroupSubscriptionWhereInput!]
+  OR: [GroupSubscriptionWhereInput!]
+  NOT: [GroupSubscriptionWhereInput!]
+}
+
+input GroupUpdateInput {
+  name: String
+  description: String
+  members: UserUpdateManyInput
+  posts: PostUpdateManyWithoutGroupInput
+}
+
+input GroupUpdateManyMutationInput {
+  name: String
+  description: String
+}
+
+input GroupUpdateOneRequiredWithoutPostsInput {
+  create: GroupCreateWithoutPostsInput
+  update: GroupUpdateWithoutPostsDataInput
+  upsert: GroupUpsertWithoutPostsInput
+  connect: GroupWhereUniqueInput
+}
+
+input GroupUpdateWithoutPostsDataInput {
+  name: String
+  description: String
+  members: UserUpdateManyInput
+}
+
+input GroupUpsertWithoutPostsInput {
+  update: GroupUpdateWithoutPostsDataInput!
+  create: GroupCreateWithoutPostsInput!
+}
+
+input GroupWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  members_every: UserWhereInput
+  members_some: UserWhereInput
+  members_none: UserWhereInput
+  posts_every: PostWhereInput
+  posts_some: PostWhereInput
+  posts_none: PostWhereInput
+  AND: [GroupWhereInput!]
+  OR: [GroupWhereInput!]
+  NOT: [GroupWhereInput!]
+}
+
+input GroupWhereUniqueInput {
+  id: ID
+}
+
 scalar Long
 
 type Mutation {
+  createGroup(data: GroupCreateInput!): Group!
+  updateGroup(data: GroupUpdateInput!, where: GroupWhereUniqueInput!): Group
+  updateManyGroups(data: GroupUpdateManyMutationInput!, where: GroupWhereInput): BatchPayload!
+  upsertGroup(where: GroupWhereUniqueInput!, create: GroupCreateInput!, update: GroupUpdateInput!): Group!
+  deleteGroup(where: GroupWhereUniqueInput!): Group
+  deleteManyGroups(where: GroupWhereInput): BatchPayload!
   createPost(data: PostCreateInput!): Post!
   updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
-  deletePost(where: PostWhereUniqueInput!): Post
+  updateManyPosts(data: PostUpdateManyMutationInput!, where: PostWhereInput): BatchPayload!
   upsertPost(where: PostWhereUniqueInput!, create: PostCreateInput!, update: PostUpdateInput!): Post!
-  updateManyPosts(data: PostUpdateInput!, where: PostWhereInput): BatchPayload!
+  deletePost(where: PostWhereUniqueInput!): Post
   deleteManyPosts(where: PostWhereInput): BatchPayload!
+  createPostAnalytics(data: PostAnalyticsCreateInput!): PostAnalytics!
+  updateManyPostAnalyticses(data: PostAnalyticsUpdateManyMutationInput!, where: PostAnalyticsWhereInput): BatchPayload!
+  deleteManyPostAnalyticses(where: PostAnalyticsWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -31,78 +214,263 @@ enum MutationType {
   DELETED
 }
 
-"""An object with an ID"""
 interface Node {
-  """The id of the object."""
   id: ID!
 }
 
-"""Information about pagination in a connection."""
 type PageInfo {
-  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
   startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
   endCursor: String
 }
 
-type Post implements Node {
+type Post {
   id: ID!
-  author: String!
-  time_created: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  owner: User!
+  group: Group!
+  tags: [String!]!
   content: String!
+  analytics: PostAnalytics
 }
 
-"""A connection to a list of items."""
-type PostConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
+type PostAnalytics {
+  owner: Post!
+  views: Int!
+  expands: Int!
+  like_count: Int!
+  liked_by(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  share_count: Int!
+  shared_by(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+}
 
-  """A list of edges."""
+type PostAnalyticsConnection {
+  pageInfo: PageInfo!
+  edges: [PostAnalyticsEdge]!
+  aggregate: AggregatePostAnalytics!
+}
+
+input PostAnalyticsCreateInput {
+  owner: PostCreateOneWithoutAnalyticsInput!
+  views: Int!
+  expands: Int!
+  like_count: Int!
+  liked_by: UserCreateManyInput
+  share_count: Int!
+  shared_by: UserCreateManyInput
+}
+
+input PostAnalyticsCreateOneWithoutOwnerInput {
+  create: PostAnalyticsCreateWithoutOwnerInput
+}
+
+input PostAnalyticsCreateWithoutOwnerInput {
+  views: Int!
+  expands: Int!
+  like_count: Int!
+  liked_by: UserCreateManyInput
+  share_count: Int!
+  shared_by: UserCreateManyInput
+}
+
+type PostAnalyticsEdge {
+  node: PostAnalytics!
+  cursor: String!
+}
+
+enum PostAnalyticsOrderByInput {
+  views_ASC
+  views_DESC
+  expands_ASC
+  expands_DESC
+  like_count_ASC
+  like_count_DESC
+  share_count_ASC
+  share_count_DESC
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type PostAnalyticsPreviousValues {
+  views: Int!
+  expands: Int!
+  like_count: Int!
+  share_count: Int!
+}
+
+type PostAnalyticsSubscriptionPayload {
+  mutation: MutationType!
+  node: PostAnalytics
+  updatedFields: [String!]
+  previousValues: PostAnalyticsPreviousValues
+}
+
+input PostAnalyticsSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: PostAnalyticsWhereInput
+  AND: [PostAnalyticsSubscriptionWhereInput!]
+  OR: [PostAnalyticsSubscriptionWhereInput!]
+  NOT: [PostAnalyticsSubscriptionWhereInput!]
+}
+
+input PostAnalyticsUpdateManyMutationInput {
+  views: Int
+  expands: Int
+  like_count: Int
+  share_count: Int
+}
+
+input PostAnalyticsUpdateOneWithoutOwnerInput {
+  create: PostAnalyticsCreateWithoutOwnerInput
+  update: PostAnalyticsUpdateWithoutOwnerDataInput
+  upsert: PostAnalyticsUpsertWithoutOwnerInput
+  delete: Boolean
+  disconnect: Boolean
+}
+
+input PostAnalyticsUpdateWithoutOwnerDataInput {
+  views: Int
+  expands: Int
+  like_count: Int
+  liked_by: UserUpdateManyInput
+  share_count: Int
+  shared_by: UserUpdateManyInput
+}
+
+input PostAnalyticsUpsertWithoutOwnerInput {
+  update: PostAnalyticsUpdateWithoutOwnerDataInput!
+  create: PostAnalyticsCreateWithoutOwnerInput!
+}
+
+input PostAnalyticsWhereInput {
+  owner: PostWhereInput
+  views: Int
+  views_not: Int
+  views_in: [Int!]
+  views_not_in: [Int!]
+  views_lt: Int
+  views_lte: Int
+  views_gt: Int
+  views_gte: Int
+  expands: Int
+  expands_not: Int
+  expands_in: [Int!]
+  expands_not_in: [Int!]
+  expands_lt: Int
+  expands_lte: Int
+  expands_gt: Int
+  expands_gte: Int
+  like_count: Int
+  like_count_not: Int
+  like_count_in: [Int!]
+  like_count_not_in: [Int!]
+  like_count_lt: Int
+  like_count_lte: Int
+  like_count_gt: Int
+  like_count_gte: Int
+  liked_by_every: UserWhereInput
+  liked_by_some: UserWhereInput
+  liked_by_none: UserWhereInput
+  share_count: Int
+  share_count_not: Int
+  share_count_in: [Int!]
+  share_count_not_in: [Int!]
+  share_count_lt: Int
+  share_count_lte: Int
+  share_count_gt: Int
+  share_count_gte: Int
+  shared_by_every: UserWhereInput
+  shared_by_some: UserWhereInput
+  shared_by_none: UserWhereInput
+  AND: [PostAnalyticsWhereInput!]
+  OR: [PostAnalyticsWhereInput!]
+  NOT: [PostAnalyticsWhereInput!]
+}
+
+type PostConnection {
+  pageInfo: PageInfo!
   edges: [PostEdge]!
   aggregate: AggregatePost!
 }
 
 input PostCreateInput {
-  author: String!
-  time_created: String!
+  owner: UserCreateOneWithoutPostsInput!
+  group: GroupCreateOneWithoutPostsInput!
+  tags: PostCreatetagsInput
+  content: String!
+  analytics: PostAnalyticsCreateOneWithoutOwnerInput
+}
+
+input PostCreateManyWithoutGroupInput {
+  create: [PostCreateWithoutGroupInput!]
+  connect: [PostWhereUniqueInput!]
+}
+
+input PostCreateManyWithoutOwnerInput {
+  create: [PostCreateWithoutOwnerInput!]
+  connect: [PostWhereUniqueInput!]
+}
+
+input PostCreateOneWithoutAnalyticsInput {
+  create: PostCreateWithoutAnalyticsInput
+  connect: PostWhereUniqueInput
+}
+
+input PostCreatetagsInput {
+  set: [String!]
+}
+
+input PostCreateWithoutAnalyticsInput {
+  owner: UserCreateOneWithoutPostsInput!
+  group: GroupCreateOneWithoutPostsInput!
+  tags: PostCreatetagsInput
   content: String!
 }
 
-"""An edge in a connection."""
-type PostEdge {
-  """The item at the end of the edge."""
-  node: Post!
+input PostCreateWithoutGroupInput {
+  owner: UserCreateOneWithoutPostsInput!
+  tags: PostCreatetagsInput
+  content: String!
+  analytics: PostAnalyticsCreateOneWithoutOwnerInput
+}
 
-  """A cursor for use in pagination."""
+input PostCreateWithoutOwnerInput {
+  group: GroupCreateOneWithoutPostsInput!
+  tags: PostCreatetagsInput
+  content: String!
+  analytics: PostAnalyticsCreateOneWithoutOwnerInput
+}
+
+type PostEdge {
+  node: Post!
   cursor: String!
 }
 
 enum PostOrderByInput {
   id_ASC
   id_DESC
-  author_ASC
-  author_DESC
-  time_created_ASC
-  time_created_DESC
-  content_ASC
-  content_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  content_ASC
+  content_DESC
 }
 
 type PostPreviousValues {
   id: ID!
-  author: String!
-  time_created: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tags: [String!]!
   content: String!
 }
 
@@ -114,212 +482,138 @@ type PostSubscriptionPayload {
 }
 
 input PostSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PostSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [PostSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PostSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: PostWhereInput
+  AND: [PostSubscriptionWhereInput!]
+  OR: [PostSubscriptionWhereInput!]
+  NOT: [PostSubscriptionWhereInput!]
 }
 
 input PostUpdateInput {
-  author: String
-  time_created: String
+  owner: UserUpdateOneRequiredWithoutPostsInput
+  group: GroupUpdateOneRequiredWithoutPostsInput
+  tags: PostUpdatetagsInput
+  content: String
+  analytics: PostAnalyticsUpdateOneWithoutOwnerInput
+}
+
+input PostUpdateManyMutationInput {
+  tags: PostUpdatetagsInput
   content: String
 }
 
-input PostWhereInput {
-  """Logical AND on all given filters."""
-  AND: [PostWhereInput!]
+input PostUpdateManyWithoutGroupInput {
+  create: [PostCreateWithoutGroupInput!]
+  delete: [PostWhereUniqueInput!]
+  connect: [PostWhereUniqueInput!]
+  disconnect: [PostWhereUniqueInput!]
+  update: [PostUpdateWithWhereUniqueWithoutGroupInput!]
+  upsert: [PostUpsertWithWhereUniqueWithoutGroupInput!]
+}
 
-  """Logical OR on all given filters."""
-  OR: [PostWhereInput!]
+input PostUpdateManyWithoutOwnerInput {
+  create: [PostCreateWithoutOwnerInput!]
+  delete: [PostWhereUniqueInput!]
+  connect: [PostWhereUniqueInput!]
+  disconnect: [PostWhereUniqueInput!]
+  update: [PostUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [PostUpsertWithWhereUniqueWithoutOwnerInput!]
+}
 
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [PostWhereInput!]
-  id: ID
+input PostUpdatetagsInput {
+  set: [String!]
+}
 
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  author: String
-
-  """All values that are not equal to given value."""
-  author_not: String
-
-  """All values that are contained in given list."""
-  author_in: [String!]
-
-  """All values that are not contained in given list."""
-  author_not_in: [String!]
-
-  """All values less than the given value."""
-  author_lt: String
-
-  """All values less than or equal the given value."""
-  author_lte: String
-
-  """All values greater than the given value."""
-  author_gt: String
-
-  """All values greater than or equal the given value."""
-  author_gte: String
-
-  """All values containing the given string."""
-  author_contains: String
-
-  """All values not containing the given string."""
-  author_not_contains: String
-
-  """All values starting with the given string."""
-  author_starts_with: String
-
-  """All values not starting with the given string."""
-  author_not_starts_with: String
-
-  """All values ending with the given string."""
-  author_ends_with: String
-
-  """All values not ending with the given string."""
-  author_not_ends_with: String
-  time_created: String
-
-  """All values that are not equal to given value."""
-  time_created_not: String
-
-  """All values that are contained in given list."""
-  time_created_in: [String!]
-
-  """All values that are not contained in given list."""
-  time_created_not_in: [String!]
-
-  """All values less than the given value."""
-  time_created_lt: String
-
-  """All values less than or equal the given value."""
-  time_created_lte: String
-
-  """All values greater than the given value."""
-  time_created_gt: String
-
-  """All values greater than or equal the given value."""
-  time_created_gte: String
-
-  """All values containing the given string."""
-  time_created_contains: String
-
-  """All values not containing the given string."""
-  time_created_not_contains: String
-
-  """All values starting with the given string."""
-  time_created_starts_with: String
-
-  """All values not starting with the given string."""
-  time_created_not_starts_with: String
-
-  """All values ending with the given string."""
-  time_created_ends_with: String
-
-  """All values not ending with the given string."""
-  time_created_not_ends_with: String
+input PostUpdateWithoutGroupDataInput {
+  owner: UserUpdateOneRequiredWithoutPostsInput
+  tags: PostUpdatetagsInput
   content: String
+  analytics: PostAnalyticsUpdateOneWithoutOwnerInput
+}
 
-  """All values that are not equal to given value."""
+input PostUpdateWithoutOwnerDataInput {
+  group: GroupUpdateOneRequiredWithoutPostsInput
+  tags: PostUpdatetagsInput
+  content: String
+  analytics: PostAnalyticsUpdateOneWithoutOwnerInput
+}
+
+input PostUpdateWithWhereUniqueWithoutGroupInput {
+  where: PostWhereUniqueInput!
+  data: PostUpdateWithoutGroupDataInput!
+}
+
+input PostUpdateWithWhereUniqueWithoutOwnerInput {
+  where: PostWhereUniqueInput!
+  data: PostUpdateWithoutOwnerDataInput!
+}
+
+input PostUpsertWithWhereUniqueWithoutGroupInput {
+  where: PostWhereUniqueInput!
+  update: PostUpdateWithoutGroupDataInput!
+  create: PostCreateWithoutGroupInput!
+}
+
+input PostUpsertWithWhereUniqueWithoutOwnerInput {
+  where: PostWhereUniqueInput!
+  update: PostUpdateWithoutOwnerDataInput!
+  create: PostCreateWithoutOwnerInput!
+}
+
+input PostWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  owner: UserWhereInput
+  group: GroupWhereInput
+  content: String
   content_not: String
-
-  """All values that are contained in given list."""
   content_in: [String!]
-
-  """All values that are not contained in given list."""
   content_not_in: [String!]
-
-  """All values less than the given value."""
   content_lt: String
-
-  """All values less than or equal the given value."""
   content_lte: String
-
-  """All values greater than the given value."""
   content_gt: String
-
-  """All values greater than or equal the given value."""
   content_gte: String
-
-  """All values containing the given string."""
   content_contains: String
-
-  """All values not containing the given string."""
   content_not_contains: String
-
-  """All values starting with the given string."""
   content_starts_with: String
-
-  """All values not starting with the given string."""
   content_not_starts_with: String
-
-  """All values ending with the given string."""
   content_ends_with: String
-
-  """All values not ending with the given string."""
   content_not_ends_with: String
+  analytics: PostAnalyticsWhereInput
+  AND: [PostWhereInput!]
+  OR: [PostWhereInput!]
+  NOT: [PostWhereInput!]
 }
 
 input PostWhereUniqueInput {
@@ -327,17 +621,185 @@ input PostWhereUniqueInput {
 }
 
 type Query {
-  posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post]!
+  group(where: GroupWhereUniqueInput!): Group
+  groups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group]!
+  groupsConnection(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GroupConnection!
   post(where: PostWhereUniqueInput!): Post
+  posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post]!
   postsConnection(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection!
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
+  postAnalyticses(where: PostAnalyticsWhereInput, orderBy: PostAnalyticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PostAnalytics]!
+  postAnalyticsesConnection(where: PostAnalyticsWhereInput, orderBy: PostAnalyticsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PostAnalyticsConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  node(id: ID!): Node
 }
 
 type Subscription {
+  group(where: GroupSubscriptionWhereInput): GroupSubscriptionPayload
   post(where: PostSubscriptionWhereInput): PostSubscriptionPayload
+  postAnalytics(where: PostAnalyticsSubscriptionWhereInput): PostAnalyticsSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+type User {
+  id: ID!
+  username: String!
+  posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  username: String!
+  posts: PostCreateManyWithoutOwnerInput
+}
+
+input UserCreateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutPostsInput {
+  create: UserCreateWithoutPostsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutPostsInput {
+  username: String!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  username_ASC
+  username_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  username: String!
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
+}
+
+input UserUpdateDataInput {
+  username: String
+  posts: PostUpdateManyWithoutOwnerInput
+}
+
+input UserUpdateInput {
+  username: String
+  posts: PostUpdateManyWithoutOwnerInput
+}
+
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+}
+
+input UserUpdateManyMutationInput {
+  username: String
+}
+
+input UserUpdateOneRequiredWithoutPostsInput {
+  create: UserCreateWithoutPostsInput
+  update: UserUpdateWithoutPostsDataInput
+  upsert: UserUpsertWithoutPostsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutPostsDataInput {
+  username: String
+}
+
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
+}
+
+input UserUpsertWithoutPostsInput {
+  update: UserUpdateWithoutPostsDataInput!
+  create: UserCreateWithoutPostsInput!
+}
+
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
+}
+
+input UserWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_lt: String
+  username_lte: String
+  username_gt: String
+  username_gte: String
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
+  posts_every: PostWhereInput
+  posts_some: PostWhereInput
+  posts_none: PostWhereInput
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  username: String
 }

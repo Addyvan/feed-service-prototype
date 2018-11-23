@@ -2,4 +2,8 @@ endpoint: http://localhost:4466/profile/
 datamodel: datamodel.graphql
 hooks:
   post-deploy:
-    - graphql get-schema -p prisma
+    - graphql get-schema --project prisma
+    - prisma generate
+generate:
+  - generator: graphql-schema
+    output: ../src/generated/
