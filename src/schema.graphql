@@ -2,6 +2,9 @@ type Query {
     posts(id: ID): [Post]!
     users(id: ID, username: String): [User]!
     groups(id: ID, name: String): [Group]!
+    post(id: ID!): Post!
+    user(id: ID, username: String): User
+    group(id: ID, name: String): Group
 }
 
 type Mutation {

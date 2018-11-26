@@ -39,8 +39,52 @@ function groups(_, args, context, info) {
     );
 }
 
+function post(_, args, context, info) {
+  return context.prisma.query.post(
+    {
+      where:{
+        id: args.id            
+      },
+      skip: args.skip,
+      first: args.first,        
+    },
+    info
+    );
+}
+
+function user(_, args, context, info) {
+  return context.prisma.query.user(
+    {
+      where:{
+        id: args.id,
+        username: args.username,                
+      },
+      skip: args.skip,
+      first: args.first,        
+    },
+    info
+    );
+}
+
+function group(_, args, context, info) {
+  return context.prisma.query.group(
+    {
+      where:{
+        id: args.id,
+        name: args.name,                
+      },
+      skip: args.skip,
+      first: args.first,        
+    },
+    info
+    );
+}
+
 module.exports = {
   posts,
   users,
-  groups
+  groups,
+  post,
+  user,
+  group
 };
