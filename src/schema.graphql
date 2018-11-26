@@ -12,12 +12,17 @@ type Mutation {
     createGroup(name: String!, description: String): Group!
     createPost(owner: UserInput!, group: GroupInput!, tags: [String]!, content: String!): Post!
     deletePost(id: ID!): Boolean!
+    addUserToGroup(user: UserInput!, group: GroupInput!): User!
+    removeUserFromGroup(user: UserInput!, group: GroupInput!): User!
 }
 
 type User {
     id: ID!
+    createdAt: String!
+    updatedAt: String!
     username: String!
     posts: [Post]!
+    groups: [Group]!
 }
 
 type Post {
@@ -33,6 +38,8 @@ type Post {
 
 type Group {
     id: ID!
+    createdAt: String!
+    updatedAt: String!
     name: String!
     description: String
     members: [User]!

@@ -22,6 +22,8 @@ scalar DateTime
 
 type Group {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   description: String
   members(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
@@ -37,8 +39,13 @@ type GroupConnection {
 input GroupCreateInput {
   name: String!
   description: String
-  members: UserCreateManyInput
+  members: UserCreateManyWithoutGroupsInput
   posts: PostCreateManyWithoutGroupInput
+}
+
+input GroupCreateManyWithoutMembersInput {
+  create: [GroupCreateWithoutMembersInput!]
+  connect: [GroupWhereUniqueInput!]
 }
 
 input GroupCreateOneWithoutPostsInput {
@@ -46,10 +53,16 @@ input GroupCreateOneWithoutPostsInput {
   connect: GroupWhereUniqueInput
 }
 
+input GroupCreateWithoutMembersInput {
+  name: String!
+  description: String
+  posts: PostCreateManyWithoutGroupInput
+}
+
 input GroupCreateWithoutPostsInput {
   name: String!
   description: String
-  members: UserCreateManyInput
+  members: UserCreateManyWithoutGroupsInput
 }
 
 type GroupEdge {
@@ -60,18 +73,20 @@ type GroupEdge {
 enum GroupOrderByInput {
   id_ASC
   id_DESC
-  name_ASC
-  name_DESC
-  description_ASC
-  description_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
 }
 
 type GroupPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   description: String
 }
@@ -97,13 +112,22 @@ input GroupSubscriptionWhereInput {
 input GroupUpdateInput {
   name: String
   description: String
-  members: UserUpdateManyInput
+  members: UserUpdateManyWithoutGroupsInput
   posts: PostUpdateManyWithoutGroupInput
 }
 
 input GroupUpdateManyMutationInput {
   name: String
   description: String
+}
+
+input GroupUpdateManyWithoutMembersInput {
+  create: [GroupCreateWithoutMembersInput!]
+  delete: [GroupWhereUniqueInput!]
+  connect: [GroupWhereUniqueInput!]
+  disconnect: [GroupWhereUniqueInput!]
+  update: [GroupUpdateWithWhereUniqueWithoutMembersInput!]
+  upsert: [GroupUpsertWithWhereUniqueWithoutMembersInput!]
 }
 
 input GroupUpdateOneRequiredWithoutPostsInput {
@@ -113,15 +137,32 @@ input GroupUpdateOneRequiredWithoutPostsInput {
   connect: GroupWhereUniqueInput
 }
 
+input GroupUpdateWithoutMembersDataInput {
+  name: String
+  description: String
+  posts: PostUpdateManyWithoutGroupInput
+}
+
 input GroupUpdateWithoutPostsDataInput {
   name: String
   description: String
-  members: UserUpdateManyInput
+  members: UserUpdateManyWithoutGroupsInput
+}
+
+input GroupUpdateWithWhereUniqueWithoutMembersInput {
+  where: GroupWhereUniqueInput!
+  data: GroupUpdateWithoutMembersDataInput!
 }
 
 input GroupUpsertWithoutPostsInput {
   update: GroupUpdateWithoutPostsDataInput!
   create: GroupCreateWithoutPostsInput!
+}
+
+input GroupUpsertWithWhereUniqueWithoutMembersInput {
+  where: GroupWhereUniqueInput!
+  update: GroupUpdateWithoutMembersDataInput!
+  create: GroupCreateWithoutMembersInput!
 }
 
 input GroupWhereInput {
@@ -139,6 +180,22 @@ input GroupWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   name: String
   name_not: String
   name_in: [String!]
@@ -645,8 +702,11 @@ type Subscription {
 
 type User {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   username: String!
   posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]
+  groups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group!]
 }
 
 type UserConnection {
@@ -658,10 +718,16 @@ type UserConnection {
 input UserCreateInput {
   username: String!
   posts: PostCreateManyWithoutOwnerInput
+  groups: GroupCreateManyWithoutMembersInput
 }
 
 input UserCreateManyInput {
   create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateManyWithoutGroupsInput {
+  create: [UserCreateWithoutGroupsInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -670,8 +736,14 @@ input UserCreateOneWithoutPostsInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutGroupsInput {
+  username: String!
+  posts: PostCreateManyWithoutOwnerInput
+}
+
 input UserCreateWithoutPostsInput {
   username: String!
+  groups: GroupCreateManyWithoutMembersInput
 }
 
 type UserEdge {
@@ -682,16 +754,18 @@ type UserEdge {
 enum UserOrderByInput {
   id_ASC
   id_DESC
-  username_ASC
-  username_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  username_ASC
+  username_DESC
 }
 
 type UserPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   username: String!
 }
 
@@ -716,11 +790,13 @@ input UserSubscriptionWhereInput {
 input UserUpdateDataInput {
   username: String
   posts: PostUpdateManyWithoutOwnerInput
+  groups: GroupUpdateManyWithoutMembersInput
 }
 
 input UserUpdateInput {
   username: String
   posts: PostUpdateManyWithoutOwnerInput
+  groups: GroupUpdateManyWithoutMembersInput
 }
 
 input UserUpdateManyInput {
@@ -736,6 +812,15 @@ input UserUpdateManyMutationInput {
   username: String
 }
 
+input UserUpdateManyWithoutGroupsInput {
+  create: [UserCreateWithoutGroupsInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutGroupsInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutGroupsInput!]
+}
+
 input UserUpdateOneRequiredWithoutPostsInput {
   create: UserCreateWithoutPostsInput
   update: UserUpdateWithoutPostsDataInput
@@ -743,13 +828,24 @@ input UserUpdateOneRequiredWithoutPostsInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateWithoutGroupsDataInput {
+  username: String
+  posts: PostUpdateManyWithoutOwnerInput
+}
+
 input UserUpdateWithoutPostsDataInput {
   username: String
+  groups: GroupUpdateManyWithoutMembersInput
 }
 
 input UserUpdateWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   data: UserUpdateDataInput!
+}
+
+input UserUpdateWithWhereUniqueWithoutGroupsInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutGroupsDataInput!
 }
 
 input UserUpsertWithoutPostsInput {
@@ -761,6 +857,12 @@ input UserUpsertWithWhereUniqueNestedInput {
   where: UserWhereUniqueInput!
   update: UserUpdateDataInput!
   create: UserCreateInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutGroupsInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutGroupsDataInput!
+  create: UserCreateWithoutGroupsInput!
 }
 
 input UserWhereInput {
@@ -778,6 +880,22 @@ input UserWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   username: String
   username_not: String
   username_in: [String!]
@@ -795,6 +913,9 @@ input UserWhereInput {
   posts_every: PostWhereInput
   posts_some: PostWhereInput
   posts_none: PostWhereInput
+  groups_every: GroupWhereInput
+  groups_some: GroupWhereInput
+  groups_none: GroupWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

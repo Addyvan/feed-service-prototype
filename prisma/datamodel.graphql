@@ -1,7 +1,10 @@
 type User {
     id: ID! @unique
+    createdAt: DateTime!
+    updatedAt: DateTime!
     username: String! @unique
     posts: [Post!]! @relation(name: "OwnerOfPost")
+    groups: [Group!]! @relation(name: "MemberOfGroup")
 }
 
 type Post {
@@ -17,9 +20,11 @@ type Post {
 
 type Group {
     id: ID! @unique
+    createdAt: DateTime!
+    updatedAt: DateTime!
     name: String! @unique
     description: String
-    members: [User!]!
+    members: [User!]! @relation(name: "MemberOfGroup")
     posts: [Post!]!
 }
 
