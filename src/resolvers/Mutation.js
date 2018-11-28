@@ -35,17 +35,42 @@ function createGroup(_, args, context, info) {
 function createPost(_, args, context, info) {
     var createPostData = {};
 
+    var userArg = {
+        connect: null
+    };
+
+    if (args.user.id) {
+        userArg.connect = {
+            id: args.user.id
+        }
+    }
+
+    if (args.user.username) {
+        userArg.connect = {
+            username: args.user.username
+        }
+    }
+
+    var groupArg = {
+        connect: null
+    };
+
+    if (args.group.id) {
+        groupArg.connect = {
+            id: args.group.id
+        }
+    }
+
+    if (args.group.name) {
+        groupArg.connect = {
+            name: args.group.name
+        }
+    }
+
+
     createPostData = {
-        owner: {
-            connect: {
-                username: args.owner.username
-            }
-        },
-        group: {
-            connect: {
-                name: args.group.name
-            }
-        },
+        user: userArg,
+        group: groupArg,
         tags: args.tags,
         content: args.content,
         likedBy: [],
@@ -75,12 +100,23 @@ async function addUserToGroup(_, args, context, info) {
 
     var updateUserData = {};
 
-    const currentUser = await context.prisma.query.user(
-        {
-            where: {
-                username: args.user.username
-            }            
-        });
+    var userArg = {
+        where: null
+    };
+
+    if (args.user.id) {
+        userArg.where = {
+            id: args.user.id
+        }
+    }
+
+    if (args.user.username) {
+        userArg.where = {
+            username: args.user.username
+        }
+    }
+
+    const currentUser = await context.prisma.query.user(userArg);
     
     if (currentUser == null | undefined){
         throw new Error(`Could not find profile with username ${args.user.username}`)
@@ -105,12 +141,23 @@ async function removeUserFromGroup(_, args, context, info) {
 
     var updateUserData = {};
 
-    const currentUser = await context.prisma.query.user(
-        {
-            where: {
-                username: args.user.username
-            }            
-        });
+    var userArg = {
+        where: null
+    };
+
+    if (args.user.id) {
+        userArg.where = {
+            id: args.user.id
+        }
+    }
+
+    if (args.user.username) {
+        userArg.where = {
+            username: args.user.username
+        }
+    }
+
+    const currentUser = await context.prisma.query.user(userArg);
     
     if (currentUser == null | undefined){
         throw new Error(`Could not find profile with username ${args.user.username}`)

@@ -280,7 +280,7 @@ type Post {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  owner: User!
+  user: User!
   group: Group!
   tags: String
   content: String!
@@ -295,7 +295,7 @@ type PostConnection {
 }
 
 input PostCreateInput {
-  owner: UserCreateOneWithoutPostsInput!
+  user: UserCreateOneWithoutPostsInput!
   group: GroupCreateOneWithoutPostsInput!
   tags: String
   content: String!
@@ -313,18 +313,18 @@ input PostCreateManyWithoutLikedByInput {
   connect: [PostWhereUniqueInput!]
 }
 
-input PostCreateManyWithoutOwnerInput {
-  create: [PostCreateWithoutOwnerInput!]
-  connect: [PostWhereUniqueInput!]
-}
-
 input PostCreateManyWithoutSharedByInput {
   create: [PostCreateWithoutSharedByInput!]
   connect: [PostWhereUniqueInput!]
 }
 
+input PostCreateManyWithoutUserInput {
+  create: [PostCreateWithoutUserInput!]
+  connect: [PostWhereUniqueInput!]
+}
+
 input PostCreateWithoutGroupInput {
-  owner: UserCreateOneWithoutPostsInput!
+  user: UserCreateOneWithoutPostsInput!
   tags: String
   content: String!
   likedBy: UserCreateManyWithoutLikedPostsInput
@@ -332,27 +332,27 @@ input PostCreateWithoutGroupInput {
 }
 
 input PostCreateWithoutLikedByInput {
-  owner: UserCreateOneWithoutPostsInput!
+  user: UserCreateOneWithoutPostsInput!
   group: GroupCreateOneWithoutPostsInput!
   tags: String
   content: String!
-  sharedBy: UserCreateManyWithoutSharedPostsInput
-}
-
-input PostCreateWithoutOwnerInput {
-  group: GroupCreateOneWithoutPostsInput!
-  tags: String
-  content: String!
-  likedBy: UserCreateManyWithoutLikedPostsInput
   sharedBy: UserCreateManyWithoutSharedPostsInput
 }
 
 input PostCreateWithoutSharedByInput {
-  owner: UserCreateOneWithoutPostsInput!
+  user: UserCreateOneWithoutPostsInput!
   group: GroupCreateOneWithoutPostsInput!
   tags: String
   content: String!
   likedBy: UserCreateManyWithoutLikedPostsInput
+}
+
+input PostCreateWithoutUserInput {
+  group: GroupCreateOneWithoutPostsInput!
+  tags: String
+  content: String!
+  likedBy: UserCreateManyWithoutLikedPostsInput
+  sharedBy: UserCreateManyWithoutSharedPostsInput
 }
 
 type PostEdge {
@@ -400,7 +400,7 @@ input PostSubscriptionWhereInput {
 }
 
 input PostUpdateInput {
-  owner: UserUpdateOneRequiredWithoutPostsInput
+  user: UserUpdateOneRequiredWithoutPostsInput
   group: GroupUpdateOneRequiredWithoutPostsInput
   tags: String
   content: String
@@ -431,15 +431,6 @@ input PostUpdateManyWithoutLikedByInput {
   upsert: [PostUpsertWithWhereUniqueWithoutLikedByInput!]
 }
 
-input PostUpdateManyWithoutOwnerInput {
-  create: [PostCreateWithoutOwnerInput!]
-  delete: [PostWhereUniqueInput!]
-  connect: [PostWhereUniqueInput!]
-  disconnect: [PostWhereUniqueInput!]
-  update: [PostUpdateWithWhereUniqueWithoutOwnerInput!]
-  upsert: [PostUpsertWithWhereUniqueWithoutOwnerInput!]
-}
-
 input PostUpdateManyWithoutSharedByInput {
   create: [PostCreateWithoutSharedByInput!]
   delete: [PostWhereUniqueInput!]
@@ -449,8 +440,17 @@ input PostUpdateManyWithoutSharedByInput {
   upsert: [PostUpsertWithWhereUniqueWithoutSharedByInput!]
 }
 
+input PostUpdateManyWithoutUserInput {
+  create: [PostCreateWithoutUserInput!]
+  delete: [PostWhereUniqueInput!]
+  connect: [PostWhereUniqueInput!]
+  disconnect: [PostWhereUniqueInput!]
+  update: [PostUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [PostUpsertWithWhereUniqueWithoutUserInput!]
+}
+
 input PostUpdateWithoutGroupDataInput {
-  owner: UserUpdateOneRequiredWithoutPostsInput
+  user: UserUpdateOneRequiredWithoutPostsInput
   tags: String
   content: String
   likedBy: UserUpdateManyWithoutLikedPostsInput
@@ -458,27 +458,27 @@ input PostUpdateWithoutGroupDataInput {
 }
 
 input PostUpdateWithoutLikedByDataInput {
-  owner: UserUpdateOneRequiredWithoutPostsInput
+  user: UserUpdateOneRequiredWithoutPostsInput
   group: GroupUpdateOneRequiredWithoutPostsInput
   tags: String
   content: String
-  sharedBy: UserUpdateManyWithoutSharedPostsInput
-}
-
-input PostUpdateWithoutOwnerDataInput {
-  group: GroupUpdateOneRequiredWithoutPostsInput
-  tags: String
-  content: String
-  likedBy: UserUpdateManyWithoutLikedPostsInput
   sharedBy: UserUpdateManyWithoutSharedPostsInput
 }
 
 input PostUpdateWithoutSharedByDataInput {
-  owner: UserUpdateOneRequiredWithoutPostsInput
+  user: UserUpdateOneRequiredWithoutPostsInput
   group: GroupUpdateOneRequiredWithoutPostsInput
   tags: String
   content: String
   likedBy: UserUpdateManyWithoutLikedPostsInput
+}
+
+input PostUpdateWithoutUserDataInput {
+  group: GroupUpdateOneRequiredWithoutPostsInput
+  tags: String
+  content: String
+  likedBy: UserUpdateManyWithoutLikedPostsInput
+  sharedBy: UserUpdateManyWithoutSharedPostsInput
 }
 
 input PostUpdateWithWhereUniqueWithoutGroupInput {
@@ -491,14 +491,14 @@ input PostUpdateWithWhereUniqueWithoutLikedByInput {
   data: PostUpdateWithoutLikedByDataInput!
 }
 
-input PostUpdateWithWhereUniqueWithoutOwnerInput {
-  where: PostWhereUniqueInput!
-  data: PostUpdateWithoutOwnerDataInput!
-}
-
 input PostUpdateWithWhereUniqueWithoutSharedByInput {
   where: PostWhereUniqueInput!
   data: PostUpdateWithoutSharedByDataInput!
+}
+
+input PostUpdateWithWhereUniqueWithoutUserInput {
+  where: PostWhereUniqueInput!
+  data: PostUpdateWithoutUserDataInput!
 }
 
 input PostUpsertWithWhereUniqueWithoutGroupInput {
@@ -513,16 +513,16 @@ input PostUpsertWithWhereUniqueWithoutLikedByInput {
   create: PostCreateWithoutLikedByInput!
 }
 
-input PostUpsertWithWhereUniqueWithoutOwnerInput {
-  where: PostWhereUniqueInput!
-  update: PostUpdateWithoutOwnerDataInput!
-  create: PostCreateWithoutOwnerInput!
-}
-
 input PostUpsertWithWhereUniqueWithoutSharedByInput {
   where: PostWhereUniqueInput!
   update: PostUpdateWithoutSharedByDataInput!
   create: PostCreateWithoutSharedByInput!
+}
+
+input PostUpsertWithWhereUniqueWithoutUserInput {
+  where: PostWhereUniqueInput!
+  update: PostUpdateWithoutUserDataInput!
+  create: PostCreateWithoutUserInput!
 }
 
 input PostWhereInput {
@@ -556,7 +556,7 @@ input PostWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-  owner: UserWhereInput
+  user: UserWhereInput
   group: GroupWhereInput
   tags: String
   tags_not: String
@@ -639,7 +639,7 @@ type UserConnection {
 
 input UserCreateInput {
   username: String!
-  posts: PostCreateManyWithoutOwnerInput
+  posts: PostCreateManyWithoutUserInput
   groups: GroupCreateManyWithoutMembersInput
   likedPosts: PostCreateManyWithoutLikedByInput
   sharedPosts: PostCreateManyWithoutSharedByInput
@@ -667,14 +667,14 @@ input UserCreateOneWithoutPostsInput {
 
 input UserCreateWithoutGroupsInput {
   username: String!
-  posts: PostCreateManyWithoutOwnerInput
+  posts: PostCreateManyWithoutUserInput
   likedPosts: PostCreateManyWithoutLikedByInput
   sharedPosts: PostCreateManyWithoutSharedByInput
 }
 
 input UserCreateWithoutLikedPostsInput {
   username: String!
-  posts: PostCreateManyWithoutOwnerInput
+  posts: PostCreateManyWithoutUserInput
   groups: GroupCreateManyWithoutMembersInput
   sharedPosts: PostCreateManyWithoutSharedByInput
 }
@@ -688,7 +688,7 @@ input UserCreateWithoutPostsInput {
 
 input UserCreateWithoutSharedPostsInput {
   username: String!
-  posts: PostCreateManyWithoutOwnerInput
+  posts: PostCreateManyWithoutUserInput
   groups: GroupCreateManyWithoutMembersInput
   likedPosts: PostCreateManyWithoutLikedByInput
 }
@@ -736,7 +736,7 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   username: String
-  posts: PostUpdateManyWithoutOwnerInput
+  posts: PostUpdateManyWithoutUserInput
   groups: GroupUpdateManyWithoutMembersInput
   likedPosts: PostUpdateManyWithoutLikedByInput
   sharedPosts: PostUpdateManyWithoutSharedByInput
@@ -782,14 +782,14 @@ input UserUpdateOneRequiredWithoutPostsInput {
 
 input UserUpdateWithoutGroupsDataInput {
   username: String
-  posts: PostUpdateManyWithoutOwnerInput
+  posts: PostUpdateManyWithoutUserInput
   likedPosts: PostUpdateManyWithoutLikedByInput
   sharedPosts: PostUpdateManyWithoutSharedByInput
 }
 
 input UserUpdateWithoutLikedPostsDataInput {
   username: String
-  posts: PostUpdateManyWithoutOwnerInput
+  posts: PostUpdateManyWithoutUserInput
   groups: GroupUpdateManyWithoutMembersInput
   sharedPosts: PostUpdateManyWithoutSharedByInput
 }
@@ -803,7 +803,7 @@ input UserUpdateWithoutPostsDataInput {
 
 input UserUpdateWithoutSharedPostsDataInput {
   username: String
-  posts: PostUpdateManyWithoutOwnerInput
+  posts: PostUpdateManyWithoutUserInput
   groups: GroupUpdateManyWithoutMembersInput
   likedPosts: PostUpdateManyWithoutLikedByInput
 }

@@ -10,7 +10,7 @@ type Query {
 type Mutation {
     createUser(username: String!): User!
     createGroup(name: String!, description: String): Group!
-    createPost(owner: UserInput!, group: GroupInput!, tags: String, content: String!): Post!
+    createPost(user: UserInput!, group: GroupInput!, tags: String, content: String!): Post!
     deletePost(id: ID!): Boolean!
     addUserToGroup(user: UserInput!, group: GroupInput!): User!
     removeUserFromGroup(user: UserInput!, group: GroupInput!): User!
@@ -42,7 +42,7 @@ type Post {
     createdAt: String!
     updatedAt: String!
     tags: [String!]!
-    owner: User!
+    user: User!
     group: Group!
     content: String!
     likedBy: [User]!
@@ -50,9 +50,11 @@ type Post {
 }
 
 input UserInput {
-    username: String!
+    id: ID
+    username: String
 }
 
 input GroupInput {
-    name: String!
+    id: ID
+    name: String
 }

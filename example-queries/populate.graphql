@@ -21,7 +21,7 @@ mutation CreateGroup {
 
 mutation CreatePost {
   createPost(
-    owner: {
+    user: {
       username: "Addison"
     },
     group: {
@@ -31,7 +31,7 @@ mutation CreatePost {
     content: "A test of content"
   ) {
     id
-    owner {
+    user {
       username
     }
     group {
