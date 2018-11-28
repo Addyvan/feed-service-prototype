@@ -80,3 +80,14 @@ mutation LikePost {
     id
   }
 }
+
+mutation UnlikePost {
+  unlikePost(
+    postid: "cjp180jj2000e0a46iltxj3no",
+    user: {
+      username: "Addison"
+    }
+  ) {
+    id
+  }
+}
