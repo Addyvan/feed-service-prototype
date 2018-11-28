@@ -5,6 +5,8 @@ type User {
     username: String! @unique
     posts: [Post!]! @relation(name: "OwnerOfPost")
     groups: [Group!]! @relation(name: "MemberOfGroup")
+    likedPosts: [Post!]! @relation(name: "LikedPosts")
+    sharedPosts: [Post!]! @relation(name: "SharedPosts")
 }
 
 type Post {
@@ -13,9 +15,10 @@ type Post {
     updatedAt: DateTime!
     owner: User! @relation(name: "OwnerOfPost")
     group: Group!
-    tags: [String!]!
+    tags: String
     content: String!
-    analytics: PostAnalytics
+    likedBy: [User!]! @relation(name: "LikedPosts")
+    sharedBy: [User!]! @relation(name: "SharedPosts")
 }
 
 type Group {
@@ -26,14 +29,4 @@ type Group {
     description: String
     members: [User!]! @relation(name: "MemberOfGroup")
     posts: [Post!]!
-}
-
-type PostAnalytics {
-    owner: Post!
-    views: Int!
-    expands: Int!
-    like_count: Int!
-    liked_by: [User!]! @relation(name: "LikedBy")
-    share_count: Int!
-    shared_by: [User!]! @relation(name: "SharedBy")
 }

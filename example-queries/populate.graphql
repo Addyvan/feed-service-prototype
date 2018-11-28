@@ -1,0 +1,82 @@
+mutation CreateUser {
+  createUser(
+    username: "Addison"
+  ) {
+    id
+    username
+    createdAt
+  }
+}
+
+mutation CreateGroup {
+  createGroup(
+    name: "test",
+    description: "A group to test out functionality"
+  ) {
+    id
+    name
+    createdAt
+  }
+}
+
+mutation CreatePost {
+  createPost(
+    owner: {
+      username: "Addison"
+    },
+    group: {
+      name: "test"
+    },
+    tags: "",
+    content: "A test of content"
+  ) {
+    id
+    owner {
+      username
+    }
+    group {
+      name
+    }
+    content
+    likedBy {
+      username
+    }
+  }
+}
+
+mutation AddUserToGroup {
+  addUserToGroup(
+    user: {
+      username: "Addison"
+    },
+    group: {
+      name: "test"
+    }
+  ){
+    username
+  }
+}
+
+mutation RemoveUserFromGroup {
+  removeUserFromGroup(
+    user: {
+      username: "Addison"
+    },
+    group: {
+      name: "test"
+    }
+  ) {
+    username
+  }
+}
+
+mutation LikePost {
+  likePost(
+    postid: "cjp180jj2000e0a46iltxj3no",
+    user: {
+      username: "Addison"
+    }
+  ) {
+    id
+  }
+}

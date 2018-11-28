@@ -47,7 +47,9 @@ function createPost(_, args, context, info) {
             }
         },
         tags: args.tags,
-        content: args.content
+        content: args.content,
+        likedBy: [],
+        sharedBy: []
     };
 
     sendMessageToRabbitMQ('create', JSON.stringify(createPostData));
@@ -72,7 +74,6 @@ async function deletePost(_, args, context, info) {
 async function addUserToGroup(_, args, context, info) {
 
     var updateUserData = {};
-    var updateGroupData = {};
 
     const currentUser = await context.prisma.query.user(
         {
@@ -82,59 +83,15 @@ async function addUserToGroup(_, args, context, info) {
         });
     
     if (currentUser == null | undefined){
-        throw new Error(`Could not find profile with gcId ${args.user.username}`)
+        throw new Error(`Could not find profile with username ${args.user.username}`)
     }
 
-    const currentGroup = await context.prisma.query.group(
-        {
-            where: {
-                name: args.group.name
-            }            
-        });
-
-    if (currentGroup == null | undefined){
-        throw new Error(`Could not find profile with gcId ${args.group.name}`)
-    }
-
-    // add group to user's subscribed groups
-    if (currentUser.groups) {
-        updateUserData.groups = currentUser.groups;
-        updateUserData.groups.push({
-            connect: {
-                name: currentGroup.name
-            }
-        }); 
-    } else {
-        updateUserData.groups = {
-            connect: {
-                name: currentGroup.name
-            }
-        }
-    }
-
-    // add user to group's members list
-    if (currentGroup.members) {
-        updateGroupData.groups = currentGroup.members;
-        updateGroupData.members.push({
-            connect: {
-                username: currentUser.username
-            }
-        }); 
-    } else {
-        updateGroupData.members = {
-            connect: {
-                username: currentUser.username
-            }
+    updateUserData.groups = {
+        connect: {
+            name: args.group.name
         }
     }
     
-    await context.prisma.mutation.updateGroup({
-        where: {
-            name: args.group.name
-        },
-        data: updateGroupData
-    });
-
     return await context.prisma.mutation.updateUser({
         where:{
             username: args.user.username
@@ -147,7 +104,6 @@ async function addUserToGroup(_, args, context, info) {
 async function removeUserFromGroup(_, args, context, info) {
 
     var updateUserData = {};
-    var updateGroupData = {};
 
     const currentUser = await context.prisma.query.user(
         {
@@ -157,48 +113,15 @@ async function removeUserFromGroup(_, args, context, info) {
         });
     
     if (currentUser == null | undefined){
-        throw new Error(`Could not find profile with gcId ${args.user.username}`)
+        throw new Error(`Could not find profile with username ${args.user.username}`)
     }
 
-    const currentGroup = await context.prisma.query.group(
-        {
-            where: {
-                name: args.group.name
-            }            
-        });
-
-    if (currentGroup == null | undefined){
-        throw new Error(`Could not find profile with gcId ${args.group.name}`)
-    }
-
-    // add group to user's subscribed groups
-    if (currentUser.groups) {
-        updateUserData.groups = currentUser.groups;
-        console.log(updateUserData);
-        updateUserData.groups.push({
-            disconnect: {
-                name: currentGroup.name
-            }
-        }); 
-    }
-
-    // add user to group's members list
-    if (currentGroup.members) {
-        updateGroupData.groups = currentGroup.members;
-        updateGroupData.members.push({
-            disconnect: {
-                username: currentUser.username
-            }
-        }); 
+    updateUserData.groups = {
+        disconnect: {
+            name: args.group.name
+        }
     }
     
-    await context.prisma.mutation.updateGroup({
-        where: {
-            name: args.group.name
-        },
-        data: updateGroupData
-    });
-
     return await context.prisma.mutation.updateUser({
         where:{
             username: args.user.username
@@ -208,7 +131,43 @@ async function removeUserFromGroup(_, args, context, info) {
 
 }
 
+async function likePost(_, args, context, info) {
 
+    var updatePostData = {
+        likedBy: {
+            connect: {
+                username: args.user.username
+            }
+        }
+    };
+
+    return await context.prisma.mutation.updatePost({
+        where: {
+            id: args.postid
+        },
+        data: updatePostData
+    });
+
+}
+
+async function unlikePost(_, args, context, info) {
+
+    var updatePostData = {
+        likedBy: {
+            disconnect: {
+                username: args.user.username
+            }
+        }
+    };
+
+    return await context.prisma.mutation.updatePost({
+        where: {
+            id: args.postid
+        },
+        data: updatePostData
+    });
+
+}
 
 module.exports = {
     createUser,
@@ -216,5 +175,7 @@ module.exports = {
     createPost,
     deletePost,
     addUserToGroup,
-    removeUserFromGroup
+    removeUserFromGroup,
+    likePost,
+    unlikePost
 };
