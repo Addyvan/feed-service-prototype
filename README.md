@@ -13,61 +13,9 @@ Run:
 
 You can now access the playground at `http://localhost:4000/playground` and your graphql endpoint is `http://localhost:4000/graphql`.
 
-## Current queries
+## Example queries
 
-
-```
-mutation CreateGroupExample {
-    createGroup(name: "mygroupname", description: "myoptionalgroupname") {
-        name
-        description
-    }
-}
-```
-
-```
-mutation CreateUserExample {
-    createUser(username: "myusername") {
-        username
-    }
-}
-```
-
-```
-mutation CreatePost {
-  createPost(
-    owner: {
-    	username: "myusername"
-    }, 
-    group: {
-      name: "mygroupname"
-    },
-    tags: [],
-    content: "post content"
-  ) {
-    id
-    createdAt
-  }
-}
-```
-
-```
-{
-  posts {
-    id
-    createdAt
-    tags
-    owner {
-      username
-    }
-    group {
-      name
-    }
-		content    
-  }
-}
-```
-
+See the `populate.graphql` fiel in the example-queries folder for examples on how to quickly get started.
 
 ## RabbitMQ
 
