@@ -11,7 +11,9 @@ type Mutation {
     createUser(username: String!): User!
     createGroup(name: String!, description: String): Group!
     createPost(user: UserInput!, group: GroupInput!, tags: String, content: String!): Post!
+    createComment(user: UserInput!, postid: ID!, content: String!, parentCommentID: ID): Comment!
     deletePost(id: ID!): Boolean!
+    deleteComment(id: ID!): Boolean!
     addUserToGroup(user: UserInput!, group: GroupInput!): User!
     removeUserFromGroup(user: UserInput!, group: GroupInput!): User!
     likePost(user: UserInput!, postid: ID!): Post!
@@ -47,6 +49,18 @@ type Post {
     content: String!
     likedBy: [User]!
     sharedBy: [User]!
+    comments: [Comment]!
+}
+
+type Comment {
+    id: ID! 
+    createdAt: String!
+    updatedAt: String!
+    user: User!
+    post: Post!
+    parentComment: Comment
+    content: String!
+    likedBy: [User]!
 }
 
 input UserInput {

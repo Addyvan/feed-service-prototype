@@ -7,6 +7,17 @@ type User {
     groups: [Group!]! @relation(name: "MemberOfGroup")
     likedPosts: [Post!]! @relation(name: "LikedPosts")
     sharedPosts: [Post!]! @relation(name: "SharedPosts")
+    likedComments: [Comment!]! @relation(name: "LikedComments")
+}
+
+type Group {
+    id: ID! @unique
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String! @unique
+    description: String
+    members: [User!]! @relation(name: "MemberOfGroup")
+    posts: [Post!]!
 }
 
 type Post {
@@ -19,14 +30,16 @@ type Post {
     content: String!
     likedBy: [User!]! @relation(name: "LikedPosts")
     sharedBy: [User!]! @relation(name: "SharedPosts")
+    comments: [Comment!]! @relation(name: "CommentsOnPost")
 }
 
-type Group {
+type Comment {
     id: ID! @unique
     createdAt: DateTime!
     updatedAt: DateTime!
-    name: String! @unique
-    description: String
-    members: [User!]! @relation(name: "MemberOfGroup")
-    posts: [Post!]!
+    user: User! @relation(name: "OwnerOfComment")
+    post: Post! @relation(name: "CommentsOnPost")
+    parentComment: Comment # Can have a parent comment if it is replying to a comment
+    content: String!
+    likedBy: [User!]! @relation(name: "LikedComments")
 }

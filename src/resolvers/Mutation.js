@@ -76,7 +76,7 @@ function createPost(_, args, context, info) {
         likedBy: [],
         sharedBy: []
     };
-
+    
     sendMessageToRabbitMQ('create', JSON.stringify(createPostData));
 
     return context.prisma.mutation.createPost({
@@ -87,7 +87,7 @@ function createPost(_, args, context, info) {
 
 async function deletePost(_, args, context, info) {
 
-    sendMessageToRabbitMQ('deletePost', JSON.stringify({id: args.id}));
+    sendMessageToRabbitMQ('delete', JSON.stringify({id: args.id}));
     return await context.prisma.mutation.deletePost({
         where:{
             id: args.id
@@ -216,11 +216,69 @@ async function unlikePost(_, args, context, info) {
 
 }
 
+function createComment(_, args, context, info) {
+    var createCommentData = {};
+
+    var userArg = {
+        connect: null
+    };
+
+    if (args.user.id) {
+        userArg.connect = {
+            id: args.user.id
+        }
+    }
+
+    if (args.user.username) {
+        userArg.connect = {
+            username: args.user.username
+        }
+    }
+
+    createCommentData = {
+        user: userArg,
+        post: {
+            connect: {
+                id: args.postid
+            }
+        },
+        content: args.content
+    };
+
+    if (args.parentCommentID) {
+        createCommentData.parentComment = {
+            connect: {
+                id: args.parentCommentID
+            }
+        }
+    }
+    
+    sendMessageToRabbitMQ('create', JSON.stringify(createCommentData));
+
+    return context.prisma.mutation.createComment({
+        data: createCommentData,
+        }, info);
+
+}
+
+async function deleteComment(_, args, context, info) {
+
+    sendMessageToRabbitMQ('delete', JSON.stringify({id: args.id}));
+    return await context.prisma.mutation.deleteComment({
+        where:{
+            id: args.id
+        }
+    });
+
+}
+
 module.exports = {
     createUser,
     createGroup,
     createPost,
+    createComment,
     deletePost,
+    deleteComment,
     addUserToGroup,
     removeUserFromGroup,
     likePost,
