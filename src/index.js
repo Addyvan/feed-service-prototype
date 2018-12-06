@@ -1,22 +1,18 @@
-
-
-const { GraphQLServer } = require("graphql-yoga");
+const { ApolloServer } = require("apollo-server");
 const { Prisma } = require("prisma-binding");
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
+const apolloSchema = require("./schema");
 
 const resolvers = {
   Query,
   Mutation,
 }
 
-const server = new GraphQLServer({
-  typeDefs: './src/schema.graphql',
+const server = new ApolloServer({
+  typeDefs: apolloSchema,
   resolvers,
-  resolverValidationOptions: {
-    requireResolversForResolveType: false 
-  },
-  context: req => ({
+  context: ({req}) => ({
     ...req,
     prisma: new Prisma({
       typeDefs: './src/generated/prisma.graphql',
@@ -31,6 +27,8 @@ const options = {
   endpoint: '/graphql',
   subscriptions: '/subscriptions',
   playground: '/playground',
-}
+};
 
-server.start(options,() => console.log(`GraphQL server is running on http://localhost:4000`))
+server.listen(options).then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`)
+});

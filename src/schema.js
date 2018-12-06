@@ -1,5 +1,8 @@
+const { gql } = require('apollo-server');
+
+const typeDefs = gql`
 type Query {
-    posts(id: ID): [Post]!
+    posts(id: ID, first: Int, last: Int): [Post]!
     users(id: ID, username: String): [User]!
     groups(id: ID, name: String): [Group]!
     post(id: ID!): Post!
@@ -36,7 +39,7 @@ type Group {
     name: String!
     description: String
     members: [User]!
-    posts: [Post]!
+    posts(first: Int, last: Int): [Post]!
 }
 
 type Post {
@@ -72,3 +75,6 @@ input GroupInput {
     id: ID
     name: String
 }
+`
+
+module.exports = typeDefs;
