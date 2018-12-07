@@ -5,7 +5,7 @@ function posts(_, args, context, info) {
         id: args.id            
       },
       skip: args.skip,
-      first: args.first,        
+      first: args.first    
     },
     info
     );

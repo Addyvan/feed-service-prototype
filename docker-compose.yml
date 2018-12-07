@@ -41,6 +41,7 @@ services:
     volumes:
       - 'rabbitmq_data:/bitnami'
 
+
 volumes:
   rabbitmq_data:
     driver: local

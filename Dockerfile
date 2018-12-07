@@ -13,16 +13,13 @@ COPY package*.json ./
 
 RUN npm install
 
-# If you are building your code for production
-# RUN npm install --only=production
-
 COPY . .
 
 # Bundle app source
 
-COPY ./docker/start.sh /usr/src/app
+COPY ./start.sh /usr/src/app
 RUN chmod +x start.sh
 
 EXPOSE 4000
 
-CMD [ "./start.sh" ]
+CMD ["./start.sh"]

@@ -96,6 +96,35 @@ async function deletePost(_, args, context, info) {
 
 }
 
+async function updateGroupDescription(_, args, context, info) {
+
+    var groupArg = {
+        where: null
+    };
+
+    if (args.group.id) {
+        groupArg.where = {
+            id: args.group.id
+        }
+    }
+
+    if (args.group.name) {
+        groupArg.where = {
+            name: args.group.name
+        }
+    }
+
+    var updateGroupData = {
+        description: args.description
+    };
+
+    return await context.prisma.mutation.updateGroup({
+        where: groupArg.where,
+        data: updateGroupData
+    });
+
+}
+
 async function addUserToGroup(_, args, context, info) {
 
     var updateUserData = {};
@@ -279,6 +308,7 @@ module.exports = {
     createComment,
     deletePost,
     deleteComment,
+    updateGroupDescription,
     addUserToGroup,
     removeUserFromGroup,
     likePost,

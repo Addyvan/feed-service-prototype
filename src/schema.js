@@ -17,6 +17,7 @@ type Mutation {
     createComment(user: UserInput!, postid: ID!, content: String!, parentCommentID: ID): Comment!
     deletePost(id: ID!): Boolean!
     deleteComment(id: ID!): Boolean!
+    updateGroupDescription(group: GroupInput!, description: String!): Group!
     addUserToGroup(user: UserInput!, group: GroupInput!): User!
     removeUserFromGroup(user: UserInput!, group: GroupInput!): User!
     likePost(user: UserInput!, postid: ID!): Post!
@@ -39,7 +40,7 @@ type Group {
     name: String!
     description: String
     members: [User]!
-    posts(first: Int, last: Int): [Post]!
+    posts(first: Int, last: Int, orderBy: orderByEnum): [Post]!
 }
 
 type Post {
@@ -74,6 +75,11 @@ input UserInput {
 input GroupInput {
     id: ID
     name: String
+}
+
+enum orderByEnum {
+    createdAt_ASC
+    createdAt_DESC
 }
 `
 

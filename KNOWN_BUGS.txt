@@ -1,5 +1,3 @@
 QUERY BUGS
 
 MUTATION BUGS
--> When adding a user to their first group the user object returns null for groups; however, when queried, the operation was successful
-        -> Same thing with like post and unlike post... The mutation goes through but you cannot query for likedBy to confirm
