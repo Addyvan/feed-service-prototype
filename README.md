@@ -15,7 +15,7 @@ You can now access the playground at `http://localhost:4000/playground` and your
 
 ## Example queries
 
-See the `populate.graphql` fiel in the example-queries folder for examples on how to quickly get started.
+See the `populate.graphql` field in the example-queries folder for examples on how to quickly get started.
 
 ## RabbitMQ
 
